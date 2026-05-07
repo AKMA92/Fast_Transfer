@@ -1,0 +1,4 @@
+gtfs.zip 
+gtfs_data/ 
+__pycache__/ 
+*.pyc 
