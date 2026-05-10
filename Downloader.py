@@ -23,9 +23,10 @@ class Downloader:
             print("age:", age)
 
             # Wenn ZIP-Datei jünger als 10 Minuten ist -> Cache benutzen
-            if age < 600:
+            #if age < 600:
+            if 1 < 2:
                 print("Benutze Cache-ZIP")
-                self.unzip_file()
+                #self.unzip_file()
                 return self.target_folder
 
         # Sonst neue ZIP-Datei laden
