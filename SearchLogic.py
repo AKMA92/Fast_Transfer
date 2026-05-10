@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 class SearchLogic:
 
     def __init__(self):
@@ -36,11 +37,12 @@ class SearchLogic:
 
         return hours * 60 + minutes
 
-    def find_sprinter_by_names(
+    def find_connection_by_names(
             self,
             start_name,
             transfer_name,
-            target_name
+            target_name,
+            is_sprinter=False
     ):
         # 1. Namen in stop_id umwandeln
         start_id = self.find_stop_id(start_name)
@@ -56,24 +58,26 @@ class SearchLogic:
         print(f"{transfer_name}: {transfer_id}")
         print(f"{target_name}: {target_id}")
 
-        # 2. Sprinter mit IDs suchen
-        self.find_sprinter_via_transfer(
+        # 2. Verbindung suchen
+        self.find_connection_via_transfer(
             start_id,
             transfer_id,
             target_id,
             start_name,
             transfer_name,
-            target_name
+            target_name,
+            is_sprinter
         )
 
-    def find_sprinter_via_transfer(
+    def find_connection_via_transfer(
             self,
             start_id,
             transfer_id,
             target_id,
             start_name,
             transfer_name,
-            target_name
+            target_name,
+            is_sprinter=False
     ):
         relevant_stops = self.stop_times[
             self.stop_times["stop_id"].isin(
@@ -112,11 +116,21 @@ class SearchLogic:
                         "arrival_target": target_row["arrival_time"]
                     })
 
-        # 4. Wartezeit berechnen
-        print(f"\nSprinter-Verbindungen {start_name} -> {transfer_name} -> {target_name}:\n")
+        # 4. Je nach Modus andere Umsteigezeit verwenden
+        if is_sprinter:
+            min_waiting_time = 2
+            max_waiting_time = 5
+            search_type = "Sprinter-Verbindungen"
+        else:
+            min_waiting_time = 2
+            max_waiting_time = 30
+            search_type = "Normale Verbindungen"
+
+        print(f"\n{search_type} {start_name} -> {transfer_name} -> {target_name}:\n")
 
         found = False
 
+        # 5. Beide Trip-Listen vergleichen
         for first_trip in start_to_transfer:
             arrival_transfer = self.time_to_minutes(
                 first_trip["arrival_transfer"]
@@ -129,10 +143,11 @@ class SearchLogic:
 
                 waiting_time = departure_transfer - arrival_transfer
 
-                if 2 <= waiting_time <= 3:
+                # 6. Prüfen, ob die Wartezeit zum Modus passt
+                if min_waiting_time <= waiting_time <= max_waiting_time:
                     found = True
 
-                    print("Sprinter gefunden:")
+                    print("Verbindung gefunden:")
                     print(f"Trip 1: {first_trip['trip_id']}")
                     print(f"Ab {start_name}: {first_trip['departure_start']}")
                     print(f"An {transfer_name}: {first_trip['arrival_transfer']}")
@@ -143,14 +158,24 @@ class SearchLogic:
                     print("-" * 50)
 
         if not found:
-            print("Keine Sprinter-Verbindung mit 2–3 Minuten Umsteigezeit gefunden.")
+            print(f"Keine passende Verbindung gefunden.")
 
 
 if __name__ == "__main__":
     search = SearchLogic()
 
-    search.find_sprinter_by_names(
+    # Normale Suche: 2 bis 30 Minuten Umsteigezeit
+    search.find_connection_by_names(
         "Winterthur",
         "Zürich HB",
-        "Horgen"
+        "Horgen",
+        is_sprinter=False
+    )
+
+    # Sprinter-Suche: 2 bis 5 Minuten Umsteigezeit
+    search.find_connection_by_names(
+        "Winterthur",
+        "Zürich HB",
+        "Horgen",
+        is_sprinter=True
     )
