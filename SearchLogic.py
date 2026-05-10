@@ -160,7 +160,7 @@ class SearchLogic:
         if not found:
             print(f"Keine passende Verbindung gefunden.")
 
-
+"""
 if __name__ == "__main__":
     search = SearchLogic()
 
@@ -179,3 +179,5 @@ if __name__ == "__main__":
         "Horgen",
         is_sprinter=True
     )
+
+"""
