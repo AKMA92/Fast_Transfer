@@ -78,8 +78,8 @@ class Application (QMainWindow):
 # Ergebnisse
         self.results = QTextEdit()
         self.results.setReadOnly(True)
+        self.results.setStyleSheet("background-color: white; color: black;")
         self.results.setPlaceholderText("Hier erscheinen die Verbindungen...")
-        self.results.setStyleSheet("background-color: white;")
         main_layout.addWidget(QLabel("Verbindungen:"))
         main_layout.addWidget(self.results)
 #Connection
