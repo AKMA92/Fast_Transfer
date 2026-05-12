@@ -14,7 +14,7 @@ class Application (QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Fast Transfer - Fahrplanapp")
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(888, 666)
         self.build_ui()
 
     def build_ui(self):
@@ -28,12 +28,14 @@ class Application (QMainWindow):
         title.setStyleSheet("font-size: 20px; font-weight: bold;")
         main_layout.addWidget(title)
 # Datum-DropDown
+        filter_layout = QHBoxLayout()
+
         self.input_datum = QDateTimeEdit ()
         self.input_datum.setDate(QDate.currentDate())
         self.input_datum.setDisplayFormat("dd.MM.yyyy")
         self.input_datum.setCalendarPopup(True)
-        main_layout.addWidget(QLabel("Datum:"))
-        main_layout.addWidget(self.input_datum)
+        filter_layout.addWidget(QLabel("Datum:"))
+        filter_layout.addWidget(self.input_datum)
 # Abfahrtszeit-DropDown
         self.input_time = QComboBox()
         current_hour = QDateTime.currentDateTime().time().hour()
@@ -46,17 +48,20 @@ class Application (QMainWindow):
         closest = f"{current_hour:02d}:{(current_minute // 15) * 15:02d} Uhr"
         index = self.input_time.findText(closest)
         self.input_time.setCurrentIndex(index)
+        filter_layout.addWidget(QLabel("Abfahrtszeit:"))
+        filter_layout.addWidget(self.input_time)
+ # Sprinter-Checkbox
+        self.checkbox_sprinter = QCheckBox("Sprinter-Modus (aktiviert kurze Umstiegszeiten)")
+        filter_layout.addWidget(self.checkbox_sprinter)
 
-        main_layout.addWidget(QLabel("Abfahrtszeit:"))
-        main_layout.addWidget(self.input_time)
+        filter_layout.addStretch()
+        main_layout.addLayout(filter_layout)
 
 # Eingabefelder
         self.input_start = QLineEdit()
         self.input_start.setPlaceholderText("Startstation z.B. Winterthur")
-
         self.input_transfer = QLineEdit()
         self.input_transfer.setPlaceholderText("Transfer z.B. Zürich HB")
-
         self.input_end = QLineEdit()
         self.input_end.setPlaceholderText("Endstation z.B. Thalwil")
 
@@ -66,9 +71,6 @@ class Application (QMainWindow):
         main_layout.addWidget(self.input_transfer)
         main_layout.addWidget(QLabel("Ziel:"))
         main_layout.addWidget(self.input_end)
-# Sprinter-Checkbox
-        self.checkbox_sprinter = QCheckBox("Sprinter-Modus (aktiviert kurze Umstiegszeiten)")
-        main_layout.addWidget(self.checkbox_sprinter)
 # Such-Button
         self.btn_search = QPushButton("Verbindung suchen")
         self.btn_search.setStyleSheet("font-size: 14px; padding: 8px; background-color: red;")
@@ -77,10 +79,15 @@ class Application (QMainWindow):
         self.results = QTextEdit()
         self.results.setReadOnly(True)
         self.results.setPlaceholderText("Hier erscheinen die Verbindungen...")
+        self.results.setStyleSheet("background-color: white;")
         main_layout.addWidget(QLabel("Verbindungen:"))
         main_layout.addWidget(self.results)
-
+#Connection
         self.btn_search.clicked.connect(self.on_search)
+
+        self.input_start.returnPressed.connect(self.input_transfer.setFocus)
+        self.input_transfer.returnPressed.connect(self.input_end.setFocus)
+        self.input_end.returnPressed.connect(self.btn_search.click)
 
     def on_search(self):
         start = self.input_start.text()
