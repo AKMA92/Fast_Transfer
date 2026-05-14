@@ -1,8 +1,10 @@
 import sys
+
+from PySide6.QtGui import QDoubleValidator
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QVBoxLayout,
     QHBoxLayout, QLabel, QPushButton, QComboBox,
-    QLineEdit, QCheckBox, QWidget, QTextEdit, QDateTimeEdit
+    QLineEdit, QCheckBox, QWidget, QTextEdit, QDateTimeEdit, QDateEdit
 )
 from PySide6.QtCore import QDateTime, QDate
 
@@ -30,12 +32,17 @@ class Application (QMainWindow):
 # Datum-DropDown
         filter_layout = QHBoxLayout()
 
-        self.input_datum = QDateTimeEdit ()
+        self.input_datum = QDateTimeEdit()
         self.input_datum.setDate(QDate.currentDate())
         self.input_datum.setDisplayFormat("dd.MM.yyyy")
         self.input_datum.setCalendarPopup(True)
         filter_layout.addWidget(QLabel("Datum:"))
         filter_layout.addWidget(self.input_datum)
+
+        self.dateraw = self.input_datum.date()
+        self.date = self.dateraw.toString("yyyyMMdd")
+
+
 # Abfahrtszeit-DropDown
         self.input_time = QComboBox()
         current_hour = QDateTime.currentDateTime().time().hour()
@@ -50,6 +57,7 @@ class Application (QMainWindow):
         self.input_time.setCurrentIndex(index)
         filter_layout.addWidget(QLabel("Abfahrtszeit:"))
         filter_layout.addWidget(self.input_time)
+        self.time = self.input_time.currentText().replace(" Uhr", "") + ":00"
  # Sprinter-Checkbox
         self.checkbox_sprinter = QCheckBox("Sprinter-Modus (aktiviert kurze Umstiegszeiten)")
         filter_layout.addWidget(self.checkbox_sprinter)
@@ -60,10 +68,14 @@ class Application (QMainWindow):
 # Eingabefelder
         self.input_start = QLineEdit()
         self.input_start.setPlaceholderText("Startstation z.B. Winterthur")
+        self.input_start.setText("Winterthur")
         self.input_transfer = QLineEdit()
         self.input_transfer.setPlaceholderText("Transfer z.B. Zürich HB")
+        self.input_transfer.setText("Zürich HB")
         self.input_end = QLineEdit()
-        self.input_end.setPlaceholderText("Endstation z.B. Thalwil")
+        self.input_end.setPlaceholderText("Endstation z.B. Bern")
+        self.input_end.setText("Bern")
+
 
         main_layout.addWidget(QLabel("Start:"))
         main_layout.addWidget(self.input_start)
@@ -82,6 +94,7 @@ class Application (QMainWindow):
         self.results.setPlaceholderText("Hier erscheinen die Verbindungen...")
         main_layout.addWidget(QLabel("Verbindungen:"))
         main_layout.addWidget(self.results)
+
 #Connection
         self.btn_search.clicked.connect(self.on_search)
 
@@ -95,11 +108,17 @@ class Application (QMainWindow):
         end = self.input_end.text()
         is_sprinter = self.checkbox_sprinter.isChecked()
 
+        date = self.input_datum.date().toString("dd.MM.yyyy")
+        time = self.input_time.currentText().replace(" Uhr", "") + ":00"
+
         if not start or not transfer or not end:
             self.results.setText("Bitte alle Felder ausfüllen.")
             return
+
         try:
-            self.search.find_connection_by_names(start, transfer, end, is_sprinter)
+            result_list = self.search.find_connection_by_names(start, transfer, end, date, time, is_sprinter)
+            self.results.setText("\n\n".join(result_list))
+
         except Exception as e:
             self.results.setText(f"Fehler: {str(e)}")
 
