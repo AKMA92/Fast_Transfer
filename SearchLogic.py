@@ -4,6 +4,9 @@ import pandas as pd
 class SearchLogic:
 
     def __init__(self):
+        pass
+
+    def load_csv(self):
         self.stops = pd.read_csv(
             "gtfs_data/stops.txt",
             sep=";",
@@ -39,6 +42,8 @@ class SearchLogic:
 
 
     def find_connection_by_names(self, start_name, transfer_name, target_name, date, time, is_sprinter=False):
+
+        self.load_csv()
 
         start_id = self.find_stop_id(start_name)
         transfer_id = self.find_stop_id(transfer_name)

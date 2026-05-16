@@ -116,6 +116,8 @@ class Application (QMainWindow):
             return
 
         try:
+            self.results.setText("Bitte warten... GTFS-Daten werden geladen.")
+            QApplication.processEvents()
             result_list = self.search.find_connection_by_names(start, transfer, end, date, time, is_sprinter)
             self.results.setText("\n\n".join(result_list))
 
@@ -128,6 +130,7 @@ class Application (QMainWindow):
         downloader = Downloader()
         self.search = SearchLogic()
         downloader.get_data()
+
 
         # @Marvin hier kannst du dein GUI Objekt erzeugen
         # gui = Gui()
