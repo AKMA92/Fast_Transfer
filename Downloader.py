@@ -15,7 +15,6 @@ class Downloader:
 
     def get_data(self):
         # Prüfen, ob ZIP-Datei existiert
-        print("start downloading data")
         if os.path.exists(self.zip_file):
             file_time = os.stat(self.zip_file).st_mtime
             current_time = time.time()

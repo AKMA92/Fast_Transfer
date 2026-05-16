@@ -38,46 +38,18 @@ class SearchLogic:
         return hours * 60 + minutes
 
 
-    def find_connection_by_names(
-            self,
-            start_name,
-            transfer_name,
-            target_name,
-            date,
-            time,
-            is_sprinter=False
-    ):
+    def find_connection_by_names(self, start_name, transfer_name, target_name, date, time, is_sprinter=False):
+
         start_id = self.find_stop_id(start_name)
         transfer_id = self.find_stop_id(transfer_name)
         target_id = self.find_stop_id(target_name)
 
         if start_id is None or transfer_id is None or target_id is None:
             return ["Mindestens eine Station wurde nicht gefunden."]
-        return self.find_connection_via_transfer(
-            start_id,
-            transfer_id,
-            target_id,
-            start_name,
-            transfer_name,
-            target_name,
-            date,
-            time,
-            is_sprinter
-        )
+        return self.find_connection_via_transfer(start_id,transfer_id,target_id,start_name, transfer_name, target_name, date, time, is_sprinter)
 
 
-    def find_connection_via_transfer(
-            self,
-            start_id,
-            transfer_id,
-            target_id,
-            start_name,
-            transfer_name,
-            target_name,
-            date,
-            time,
-            is_sprinter=False
-    ):
+    def find_connection_via_transfer(self, start_id, transfer_id, target_id, start_name, transfer_name, target_name, date,time, is_sprinter=False):
         selected_time = self.time_to_minutes(time)
 
         if selected_time is None:
