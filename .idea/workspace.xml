@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4f4a418-dad1-4756-a52a-aa203d0d2492" name="Changes" comment="first commit">
-      <change beforePath="$PROJECT_DIR$/Tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/Tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SearchLogic.py" beforeDir="false" afterPath="$PROJECT_DIR$/SearchLogic.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +62,7 @@
       <recent name="C:\ZHAW\2. Semester\Prog 2\SW9\Praktikum ZVV" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests in Tests.py">
+  <component name="RunManager" selected="Python.Applikation">
     <configuration name="Applikation" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="Praktikum ZVV" />
       <option name="ENV_FILES" value="" />

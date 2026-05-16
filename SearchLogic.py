@@ -102,11 +102,11 @@ class SearchLogic:
                     })
 
         if is_sprinter:
-            min_waiting_time = 2
-            max_waiting_time = 5
-            search_type = "Sprinter-Verbindungen"
+            min_waiting_time = 1
+            max_waiting_time = 30
+            search_type = "Kritische Sprinter-Verbindungen"
         else:
-            min_waiting_time = 2
+            min_waiting_time = 5
             max_waiting_time = 30
             search_type = "Normale Verbindungen"
 
@@ -135,6 +135,13 @@ class SearchLogic:
 
                 waiting_time = departure_transfer - arrival_transfer
 
+                if waiting_time <= 4:
+                    status = "CRITICAL"
+                elif waiting_time <= 6:
+                    status = "TIGHT"
+                else:
+                    status = "SAFE"
+
                 if min_waiting_time <= waiting_time <= max_waiting_time:
                     result_text = (
                         "Verbindung gefunden:\n"
@@ -143,6 +150,7 @@ class SearchLogic:
                         f"Ab {start_name}: {first_trip['departure_start']}\n"
                         f"An {transfer_name}: {first_trip['arrival_transfer']}\n"
                         f"Umsteigezeit: {waiting_time} Minuten\n"
+                        f"Status: {status}\n"
                         f"Trip 2: {second_trip['trip_id']}\n"
                         f"Ab {transfer_name}: {second_trip['departure_transfer']}\n"
                         f"An {target_name}: {second_trip['arrival_target']}\n"
