@@ -16,14 +16,15 @@ class Downloader:
     def get_data(self):
         # Prüfen, ob ZIP-Datei existiert
         if os.path.exists(self.zip_file):
+        #if False:
             file_time = os.stat(self.zip_file).st_mtime
             current_time = time.time()
             age = current_time - file_time
             print("age:", age)
 
             # Wenn ZIP-Datei jünger als 10 Minuten ist -> Cache benutzen
-            #if age < 600:
-            if 1 < 2:
+            if age < 600:
+            #if 1 < 2:
                 print("Benutze Cache-ZIP")
                 #self.unzip_file()
                 return self.target_folder

@@ -67,14 +67,17 @@ class Application (QMainWindow):
 
 # Eingabefelder
         self.input_start = QLineEdit()
-        self.input_start.setPlaceholderText("Startstation z.B. Winterthur")
-        self.input_start.setText("Winterthur")
+        self.input_start.setPlaceholderText("Startstation z.B. Zürich Flughafen")
+        #self.input_start.setText("Zürich Flughafen")
+        self.input_start.setText("")
         self.input_transfer = QLineEdit()
-        self.input_transfer.setPlaceholderText("Transfer z.B. Zürich HB")
-        self.input_transfer.setText("Zürich HB")
+        self.input_transfer.setPlaceholderText("Transfer z.B. Zürich Oerlikon")
+        #self.input_transfer.setText("Zürich Oerlikon")
+        self.input_transfer.setText("")
         self.input_end = QLineEdit()
-        self.input_end.setPlaceholderText("Endstation z.B. Bern")
-        self.input_end.setText("Bern")
+        self.input_end.setPlaceholderText("Endstation z.B. Zürich Altstetten")
+        #self.input_end.setText("Zürich Altstetten")
+        self.input_end.setText("")
 
 
         main_layout.addWidget(QLabel("Start:"))

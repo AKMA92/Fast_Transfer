@@ -6,45 +6,46 @@ class TestSearchLogic(unittest.TestCase):
 
     def setUp(self):
         self.search = SearchLogic()
+        self.search.load_csv()
 
-    # Normal Case -> normale Zeit wird korrekt umgerechnet
+    # Normal Case
     def test_time_to_minutes(self):
         result = self.search.time_to_minutes("06:30:00")
         self.assertEqual(result, 390)
 
-    # Edge Case -> None anstelle Zeit übergeben
+    # Edge Case
     def test_time_to_minutes_none(self):
         result = self.search.time_to_minutes(None)
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
-    # Edge Case -> falsches Zeitformat abc wird übergene
+    # Edge Case
     def test_time_to_minutes_wrong_format(self):
         result = self.search.time_to_minutes("abc")
-        self.assertEqual(result, None)
+        self.assertIsNone(result)
 
-    # Failure Case -> absichtlich falscher Wert erwartet
+    # Failure Case
     def test_time_to_minutes_error(self):
-        with self.assertRaises(AssertionError):
-            result = self.search.time_to_minutes("06:30:00")
-            self.assertEqual(result, 400)
+        result = self.search.time_to_minutes("06:30:00")
+        self.assertNotEqual(result, 400)
 
-    ###############################################################################
+    # Normal Case
+    def test_find_stop_ids_winterthur(self):
+        result = self.search.find_stop_ids("Winterthur")
+        self.assertIsNotNone(result)
+        self.assertIn("8506000", result)
 
-    # Normal Case -> existierende Station wird gefunden
-    # 8506000 = Winterthur
-    def test_find_stop_id_Winterthur(self):
-        result = self.search.find_stop_id("Winterthur")
-        self.assertEqual(result, "8506000")
+    # Edge Case mit Leerzeichen
+    def test_find_stop_ids_with_spaces(self):
+        result = self.search.find_stop_ids(" Winterthur ")
+        self.assertIsNotNone(result)
+        self.assertIn("8506000", result)
 
-    # Failure Case -> Station existiert nicht
-    def test_find_stop_id_not_found(self):
-        result = self.search.find_stop_id("ErfundeneStation")
-        self.assertEqual(result, None)
+    # Failure Case
+    def test_find_stop_ids_not_found(self):
+        result = self.search.find_stop_ids("ErfundeneStation")
+        self.assertIsNone(result)
 
-    ###############################################################################
-
-    # Failure Case -> ungültige Zeit wird übergeben
-    # abc anstelle Zeit zBsp 00:30:30 übergeben
+    # Failure Case ungültige Zeit
     def test_invalid_time_connection(self):
         result = self.search.find_connection_by_names(
             "Winterthur",
@@ -54,10 +55,12 @@ class TestSearchLogic(unittest.TestCase):
             "abc",
             False
         )
-        self.assertEqual(result, ["Ungültige Zeit. Erwartetes Format: HH:MM:SS"])
+        self.assertEqual(
+            result,
+            ["Ungültige Zeit. Erwartetes Format: HH:MM:SS"]
+        )
 
-    # Failure Case -> Station existiert nicht
-    # FalscheStation wird nicht gefunden da nicht existiert
+    # Failure Case Station existiert nicht
     def test_station_not_found_connection(self):
         result = self.search.find_connection_by_names(
             "FalscheStation",
@@ -67,7 +70,24 @@ class TestSearchLogic(unittest.TestCase):
             "06:30:00",
             False
         )
-        self.assertEqual(result, ["Mindestens eine Station wurde nicht gefunden."])
+        self.assertEqual(
+            result,
+            ["Mindestens eine Station wurde nicht gefunden."]
+        )
+
+    # Normal Case Verbindungssuche gibt Liste zurück
+    def test_connection_returns_list(self):
+        result = self.search.find_connection_by_names(
+            "Winterthur",
+            "Zürich HB",
+            "Bern",
+            "01.01.2026",
+            "06:30:00",
+            False
+        )
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
