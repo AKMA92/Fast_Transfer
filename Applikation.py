@@ -124,22 +124,10 @@ class Application (QMainWindow):
         except Exception as e:
             self.results.setText(f"Fehler: {str(e)}")
 
-        #self.results.setText(f"Suche: {start} => {transfer} => {end} (Sprinter-Modus: {is_sprinter})")
-
     def main(self):
         downloader = Downloader()
         self.search = SearchLogic()
         downloader.get_data()
-
-
-        # @Marvin hier kannst du dein GUI Objekt erzeugen
-        # gui = Gui()
-        # Funktionen aufrufen
-        # Lädt alle gtfs Daten herunter ins Projekt, (enzipt, erstellt Ordner)
-        # @Marvin ein Beispiel wie du die SuchLogic ansteuern kannst (Params beachten)
-        # Das Result ist aktuell noch in der Console.
-        # Ich später wirst du ein String Array oder so als Return erhalten was du dann als Ausgabe verarbeiten kannst in deinem GUI
-        #self.search.find_connection_by_names("Winterthur","Zürich HB","Horgen",is_sprinter=False)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

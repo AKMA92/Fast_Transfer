@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 class SearchLogic:
 
     def __init__(self):
